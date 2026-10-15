@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Mapa y parcelas · Barley Bot</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=DM+Sans:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body data-page="mapa" data-cursor="on">
+  <div id="loader">
+    <span id="loader-count">0</span>
+    <small>preparando el campo…</small>
+  </div>
+
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <canvas id="mascot" aria-hidden="true"></canvas>
+
+  <div id="bubble" aria-hidden="true">
+    <span class="typed"></span><span class="rest"></span>
+  </div>
+
+  <div id="wipe"></div>
+  <nav id="nav" aria-label="Principal"></nav>
+  <div id="state-markers"></div>
+
+  <!-- Zoom del mapa (también con rueda, pellizco y las teclas + y -) -->
+  <div id="zoom-ctrl" role="group" aria-label="Zoom del mapa">
+    <button id="zoom-mas" aria-label="Acercar">+</button>
+    <button id="zoom-menos" aria-label="Alejar">−</button>
+    <button id="zoom-reset" aria-label="Restablecer la vista">⌂</button>
+  </div>
+
+  <!-- 1 · Contexto general de la parcela -->
+  <section id="vista-contexto" class="vista" aria-labelledby="t-contexto">
+    <span class="kicker">01 · Contexto</span>
+    <h2 id="t-contexto">¿Qué es una parcela?</h2>
+    <p>
+      Un terreno agrícola con límites propios. En el reto cada una trae su polígono, su área en
+      hectáreas y su historia semanal de satélite durante 2025.
+    </p>
+    <div class="datos" id="datos-contexto"></div>
+    <button id="ir-estados" class="btn principal">Elegir un estado →</button>
+  </section>
+
+  <!-- 2 · Elegir estado -->
+  <section id="vista-estados" class="vista" aria-labelledby="t-estados" hidden>
+    <span class="kicker">02 · Mapa</span>
+    <h2 id="t-estados">¿Dónde me planto?</h2>
+    <p>
+      Elige Puebla, Tlaxcala o Hidalgo, en la lista o sobre el mapa. Arrastra para mover el
+      mapa y usa la rueda o los botones + y − para acercarte.
+    </p>
+    <div class="estados-lista" id="estados-lista"></div>
+    <p><small>Las fronteras son aproximadas, dibujadas a mano.</small></p>
+    <div class="panel-acciones">
+      <button id="volver-contexto">← Contexto</button>
+      <button id="saltar-viaje" hidden>Entrar ya →</button>
+    </div>
+  </section>
+
+  <!-- 3 · Campo: menú lateral con las acciones -->
+  <aside id="hud-campo" class="hud-campo" aria-label="Acciones del campo" hidden>
+    <h4>Acciones</h4>
+    <button id="volver-estados">← Cambiar estado</button>
+    <button id="vista-general" hidden>Vista general</button>
+    <button id="repetir-historia">↻ Cómo creció</button>
+    <button id="predecir-todas" class="principal">Predecir las 59</button>
+    <div class="leyenda" aria-label="Leyenda">
+      <span><span class="legend-dot" style="background: var(--green)"></span>rendimiento conocido</span>
+      <span><span class="legend-dot rayada" style="background: var(--gold)"></span>por predecir (rayada)</span>
+    </div>
+    <button id="plegar-menu">◂ Ocultar menú</button>
+  </aside>
+  <button id="abrir-menu-campo" aria-label="Mostrar el menú de acciones">☰ Acciones</button>
+
+  <button id="saltar-explicacion" hidden>Saltar explicación ⏭</button>
+
+  <div id="timeline">
+    <button id="reproducir" aria-label="Reproducir el ciclo">▶</button>
+    <span>Semana <b id="week-label">15</b></span>
+    <input type="range" id="week-slider" min="0" max="50" step="0.25" value="14"
+           aria-label="Semana del año" />
+  </div>
+
+  <aside id="panel" aria-live="polite">
+    <h3 id="panel-title">—</h3>
+    <p id="panel-info"></p>
+    <div id="prediccion-caja"></div>
+    <div id="var-chips" role="group" aria-label="Variable de la gráfica"></div>
+    <svg id="chart" viewBox="0 0 360 160" width="100%" role="img"
+         aria-label="Curva de la parcela comparada con la referencia"></svg>
+    <small>
+      <span class="legend-dot" style="background: var(--green)"></span>
+      referencia (parcelas ≥ 4.5 t/ha)
+      <span class="legend-dot" style="background: var(--gold)"></span>
+      esta parcela
+    </small>
+    <p id="panel-climate"></p>
+    <div class="panel-acciones">
+      <button id="ver-cosecha">¿A dónde va mi cosecha? 🚚</button>
+    </div>
+  </aside>
+
+  <!-- Destino de la cosecha -->
+  <div id="modal-cosecha" class="modal" role="dialog" aria-modal="true"
+       aria-labelledby="cosecha-titulo" hidden>
+    <div class="modal-caja">
+      <h3 id="cosecha-titulo">¿A dónde va la cosecha?</h3>
+      <p id="cosecha-resumen"></p>
+      <svg id="cosecha-svg" viewBox="0 0 720 340" role="img"
+           aria-label="Animación del grano viajando de la parcela a su destino"></svg>
+      <div class="cosecha-ctrl">
+        <label for="cosecha-rend">Probar con otro rendimiento:</label>
+        <input type="range" id="cosecha-rend" min="2" max="5.6" step="0.1" />
+        <b id="cosecha-valor"></b>
+      </div>
+      <p id="cosecha-texto"></p>
+      <p class="aviso">
+        Regla didáctica del proyecto. En la vida real el destino depende de la calidad del grano
+        (calibre, proteína, humedad), no solo del rendimiento.
+      </p>
+      <button id="cerrar-cosecha" class="btn principal">Cerrar</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="common.js"></script>
+  <script src="data.js"></script>
+  <script src="paises.js"></script>
+  <script src="estados.js"></script>
+  <script src="modelo-core.js"></script>
+  <script src="mascota.js"></script>
+  <script src="mapa.js"></script>
+</body>
+</html>

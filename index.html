@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Barley Bot · FIRA 2026</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=DM+Sans:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body data-page="home" data-cursor="on">
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <div id="loader">
+    <span id="loader-count">0</span>
+    <small>sembrando…</small>
+  </div>
+
+  <div id="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+  <canvas id="mascot" aria-hidden="true"></canvas>
+
+  <div id="bubble" aria-hidden="true">
+    <span class="typed"></span><span class="rest"></span>
+  </div>
+
+  <nav id="nav" aria-label="Principal"></nav>
+
+  <main id="contenido">
+    <section
+      class="section hero"
+      data-say="¡Hola! Soy Barley Bot, una semilla de cebada. Te cuento la historia de mi familia y cómo podemos predecir cuánto rinde cada parcela."
+    >
+      <div class="block wide">
+        <span class="clip"><h1 id="hero-title" aria-label="Barley Bot"></h1></span>
+        <p class="tagline">
+          <b>De la semilla a la cosecha.</b>
+          Predicción de rendimiento de cebada con 197 parcelas · Reto FIRA 2026
+        </p>
+        <span class="kicker">Desplázate ↓</span>
+      </div>
+    </section>
+
+    <section
+      class="section"
+      data-say="Mi familia lleva unos diez mil años con la gente. Mira cómo crece una planta de cebada."
+    >
+      <div class="block">
+        <span class="kicker">01 · Origen</span>
+        <h2>Hace diez mil años</h2>
+        <span class="gigante" data-contar="10000" data-formato="miles">0</span>
+        <p>
+          años de cultivo. La cebada (<i>Hordeum vulgare</i>) fue de los primeros cereales
+          domesticados, en la Media Luna Fértil de Oriente Medio.
+        </p>
+      </div>
+    </section>
+
+    <section
+      class="section"
+      data-say="Estos números son de mi familia en el mundo y en México. Fíjate en el último: el rendimiento."
+    >
+      <div class="block">
+        <span class="kicker">02 · La cebada en números</span>
+        <h2>Pequeña, pero enorme</h2>
+        <div class="stats">
+          <div class="stat">
+            <b>4.º</b>
+            <span>
+              cereal más producido del mundo.
+              <small>Después del maíz, el arroz y el trigo (FAO).</small>
+            </span>
+          </div>
+          <div class="stat">
+            <b data-contar="900" data-prefijo="+" data-sufijo=" mil t">0</b>
+            <span>
+              de cebada al año en México desde 2016.
+              <small>INEGI, vía Cerveceros de México.</small>
+            </span>
+          </div>
+          <div class="stat">
+            <b data-contar="25" data-prefijo="+" data-sufijo=" mil">0</b>
+            <span>
+              familias productoras en el Altiplano, Durango y Zacatecas (SADER, 2021).
+            </span>
+          </div>
+          <div class="stat">
+            <b id="stat-rendimiento">2.6</b>
+            <span>
+              t/ha de rendimiento medio nacional (2013–2019).
+              <small id="stat-reto">Las mejores parcelas del reto llegan mucho más arriba.</small>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="section"
+      data-say="Cada espiga guarda decenas de granos como yo. Al madurar nos soltamos y caemos al suelo, listos para volver a sembrarse."
+    >
+      <div class="block">
+        <span class="kicker">03 · La espiga</span>
+        <h2>Los granos caen al suelo</h2>
+        <p>
+          Una espiga junta decenas de granos. Cuando maduran se sueltan y caen; los que se
+          cosechan se limpian y se clasifican según su calidad: de ahí salen la malta, el
+          forraje y la harina.
+        </p>
+      </div>
+    </section>
+
+    <section
+      class="section"
+      data-say="Esta es nuestra línea del tiempo. Desliza las tarjetas para ver cómo llegamos hasta México."
+    >
+      <div class="block wide historia">
+        <span class="kicker">04 · Línea del tiempo</span>
+        <h2>Un viaje milenario</h2>
+        <div class="historia-tira" id="historia-tira" tabindex="0" aria-label="Línea del tiempo de la cebada">
+          <article class="hito">
+            <span class="anio">~8000 a. C.</span>
+            <p>Se domestica en la Media Luna Fértil. Es de los primeros cereales que el ser humano siembra.</p>
+          </article>
+          <article class="hito">
+            <span class="anio">~1800 a. C.</span>
+            <p>En Mesopotamia se escribe el Himno a Ninkasi, un poema que a la vez describe cómo elaborar cerveza de cebada.</p>
+          </article>
+          <article class="hito">
+            <span class="anio">Antigüedad</span>
+            <p>Egipto, Grecia y Roma la usan para pan, papillas, cerveza y como alimento de animales.</p>
+          </article>
+          <article class="hito">
+            <span class="anio">Siglo XVI</span>
+            <p>Llega a México con la colonización española y se adapta a los valles altos del centro del país.</p>
+          </article>
+          <article class="hito">
+            <span class="anio">Siglo XX</span>
+            <p>El INIFAP desarrolla variedades malteras para los Valles Altos, como Adabella, resistentes a plagas y de buena calidad.</p>
+          </article>
+          <article class="hito">
+            <span class="anio">2023</span>
+            <p>Hidalgo se convierte en el mayor productor de cebada del país, según el SIAP.</p>
+          </article>
+          <article class="hito">
+            <span class="anio">2026</span>
+            <p>Reto FIRA AgroCebada: predecir el rendimiento de 197 parcelas con imágenes de satélite.</p>
+          </article>
+        </div>
+        <div class="historia-ctrl">
+          <button id="hist-prev" aria-label="Tarjeta anterior">←</button>
+          <button id="hist-next" aria-label="Tarjeta siguiente">→</button>
+        </div>
+        <span class="fuente">Fechas de la Antigüedad aproximadas. Ver Referencias.</span>
+      </div>
+    </section>
+
+    <section
+      class="section"
+      data-say="Según cuánto y qué tan bien rinde una parcela, la cosecha va a lugares distintos. Luego te enseño ese viaje."
+    >
+      <div class="block wide">
+        <span class="kicker">05 · Destinos</span>
+        <h2>¿Para qué se usa la cebada?</h2>
+        <p>Según lo que rinde y la calidad del grano, la cosecha toma uno de estos tres caminos.</p>
+        <div class="usos-lista">
+          <div class="uso">
+            <span class="icono" aria-hidden="true">🍺</span>
+            <span>
+              <b>Malta y cerveza</b>
+              Granos grandes y parejos, con poca proteína. Es el destino más exigente y mejor pagado.
+            </span>
+            <span class="rango">≥ 4.5 t/ha</span>
+          </div>
+          <div class="uso">
+            <span class="icono" aria-hidden="true">🥣</span>
+            <span>
+              <b>Alimento</b>
+              Hojuelas, harinas y alimentos balanceados para animales de granja.
+            </span>
+            <span class="rango">3.5 – 4.5 t/ha</span>
+          </div>
+          <div class="uso">
+            <span class="icono" aria-hidden="true">🐄</span>
+            <span>
+              <b>Forraje</b>
+              Grano y paja para el ganado, o ensilado cuando la cosecha no cumple para lo demás.
+            </span>
+            <span class="rango">&lt; 3.5 t/ha</span>
+          </div>
+        </div>
+        <span class="fuente">Los rangos son una regla didáctica del proyecto, no una norma oficial.</span>
+      </div>
+    </section>
+
+    <section
+      class="section margen-mascota"
+      id="factores"
+      data-say="Una parcela no crece sola. Elige un estado y mira cómo el calor, la luz y el agua van moviendo sus índices de satélite durante 2025."
+    >
+      <div class="block wide factores">
+        <span class="kicker">06 · Factores</span>
+        <h2>Qué hace crecer a la cebada</h2>
+        <p>
+          Una parcela real por estado, semana a semana de 2025. Mira qué factores se mueven
+          juntos y por qué.
+        </p>
+        <div class="factores-panel" id="factores-demo"></div>
+      </div>
+    </section>
+
+    <section
+      class="section"
+      data-say="Hasta aquí fue mi historia. Ahora empieza el capítulo 2: cómo convertimos todo esto en una predicción."
+    >
+      <div class="block">
+        <span class="kicker">Fin del capítulo 1</span>
+        <span class="capitulo">Capítulo 2</span>
+        <h2>Del dato al rendimiento</h2>
+        <p>
+          Ya viste qué mueve a una parcela. Ahora toca explicar cómo llegamos a lo que
+          estás a punto de ver en el mapa.
+        </p>
+      </div>
+    </section>
+
+    <section
+      class="section margen-mascota"
+      id="capitulo2"
+      data-say="Antes de ir al mapa, te muestro por qué elegimos este modelo. Cuando quieras, actívalo y mira qué sale."
+    >
+      <div class="block wide">
+        <span class="kicker">Capítulo 2 · Cómo llegamos aquí</span>
+        <h2>Por qué este modelo</h2>
+        <div id="modelo-justificacion"></div>
+        <ol class="modelo-pasos" id="modelo-pasos" aria-label="Pasos del modelo"></ol>
+        <div class="acciones">
+          <button id="activar-modelo" class="btn principal">▶ Activar el modelo</button>
+          <a class="btn" href="modelo.html">Ver el modelo paso a paso</a>
+        </div>
+        <div class="modelo-resultados" id="modelo-resultados" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section
+      class="section"
+      id="tu-turno"
+      data-say="Ya tienes todo el contexto. Aquí me quedo esperándote: elige el mapa y entramos a las parcelas."
+    >
+      <div class="block">
+        <span class="kicker">Tu turno</span>
+        <h2>Ahora, a las parcelas</h2>
+        <p>
+          Elige un estado en el mapa y entra a su campo, o repasa paso a paso cómo se limpiaron
+          los datos y se construyó el modelo.
+        </p>
+        <div class="acciones">
+          <a class="btn principal" href="mapa.html">Ir al mapa →</a>
+          <a class="btn" href="modelo.html">Ver el modelo</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Reales: 197 polígonos, áreas, rendimientos de entrenamiento e índices Planet/Sentinel-2
+    (2025). Simulados: clima, GDD, suelo y eventos. Cifras de contexto: ver
+    <a href="referencias.html">Referencias</a>. 🌾
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="common.js"></script>
+  <script src="data.js"></script>
+  <script src="modelo-core.js"></script>
+  <script src="mascota.js"></script>
+  <script src="factores.js"></script>
+  <script src="capitulo2.js"></script>
+  <script src="home.js"></script>
+</body>
+</html>

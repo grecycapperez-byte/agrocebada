@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Glosario · Barley Bot</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=DM+Sans:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body data-page="glosario">
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+  <nav id="nav" aria-label="Principal"></nav>
+
+  <main id="contenido" class="pagina">
+    <span class="kicker">Glosario</span>
+    <h1>Palabras de la cebada</h1>
+    <p class="intro">Los términos de las variables, los datos y el modelo.</p>
+    <label for="buscar" class="sr-only">Buscar un término</label>
+    <input id="buscar" class="buscador" type="search" placeholder="Buscar: NDVI, ridge, R²…" autocomplete="off" />
+    <p id="sin-resultados" hidden>No hay términos con esa búsqueda.</p>
+    <dl class="glosario" id="lista">
+      <div class="termino"><dt>NDVI<small>Índice</small></dt><dd>Índice de vegetación de diferencia normalizada. Mide qué tan verde y vigorosa está la planta usando luz roja e infrarroja cercana.</dd></div>
+      <div class="termino"><dt>EVI<small>Índice</small></dt><dd>Índice de vegetación mejorado. Parecido al NDVI, pero corrige efectos de la atmósfera y del suelo y no se satura tan pronto en cultivos densos.</dd></div>
+      <div class="termino"><dt>DSWI<small>Índice</small></dt><dd>Índice de estrés hídrico en la vegetación. Baja cuando la planta tiene problemas de agua.</dd></div>
+      <div class="termino"><dt>VI6T<small>Índice</small></dt><dd>Índice espectral que combina bandas del satélite para resaltar el estado de la vegetación en una fecha.</dd></div>
+      <div class="termino"><dt>FAPAR<small>Índice</small></dt><dd>Fracción de la radiación fotosintéticamente activa que la planta absorbe. Indica cuánta luz aprovecha para crecer.</dd></div>
+      <div class="termino"><dt>LAI<small>Índice</small></dt><dd>Índice de área foliar: metros cuadrados de hoja por metro cuadrado de suelo.</dd></div>
+      <div class="termino"><dt>SAVI<small>Índice</small></dt><dd>NDVI ajustado al suelo. Útil cuando el cultivo es joven y se ve mucha tierra.</dd></div>
+      <div class="termino"><dt>CRC<small>Índice</small></dt><dd>Cobertura de residuos de cultivo: cuánto rastrojo queda sobre el suelo.</dd></div>
+      <div class="termino"><dt>Nubosidad<small>Dato</small></dt><dd>Porcentaje de nube en la imagen de satélite. Más nube, menos confiable el índice de esa fecha.</dd></div>
+      <div class="termino"><dt>GDD<small>Clima</small></dt><dd>Grados-día de desarrollo: calor acumulado que la planta necesita para avanzar de etapa. En esta versión es simulado.</dd></div>
+      <div class="termino"><dt>Planet<small>Sensor</small></dt><dd>Constelación de satélites de imágenes diarias de alta resolución. En el reto aporta NDVI, EVI y LAI.</dd></div>
+      <div class="termino"><dt>Sentinel-2<small>Sensor</small></dt><dd>Satélites de la Agencia Espacial Europea (programa Copernicus) con imágenes multiespectrales cada pocos días. En el reto aportan FAPAR y DSWI.</dd></div>
+      <div class="termino"><dt>Rendimiento<small>Agricultura</small></dt><dd>Toneladas de grano cosechadas por hectárea (t/ha).</dd></div>
+      <div class="termino"><dt>Parcela<small>Agricultura</small></dt><dd>Terreno agrícola con límites propios. En el reto cada una trae su polígono y su área.</dd></div>
+      <div class="termino"><dt>Hectárea (ha)<small>Agricultura</small></dt><dd>Diez mil metros cuadrados, más o menos una cancha de futbol grande.</dd></div>
+      <div class="termino"><dt>Cebada maltera<small>Agricultura</small></dt><dd>Cebada con calidad para convertirse en malta: grano grande y parejo, con poca proteína.</dd></div>
+      <div class="termino"><dt>Malta<small>Agricultura</small></dt><dd>Cebada germinada y secada con calor. Es la materia prima de la cerveza.</dd></div>
+      <div class="termino"><dt>Forraje<small>Agricultura</small></dt><dd>Planta o grano que se usa para alimentar al ganado.</dd></div>
+      <div class="termino"><dt>Macollamiento<small>Agricultura</small></dt><dd>Etapa en que la planta de cebada produce tallos nuevos (hijuelos) desde la base.</dd></div>
+      <div class="termino"><dt>Arista<small>Agricultura</small></dt><dd>Cada una de las “barbas” largas de la espiga de cebada.</dd></div>
+      <div class="termino"><dt>Altiplano<small>Geografía</small></dt><dd>Región de valles altos del centro de México donde se concentra la cebada maltera: Hidalgo, Tlaxcala, Puebla y Estado de México.</dd></div>
+      <div class="termino"><dt>Regresión ridge<small>Modelo</small></dt><dd>Regresión lineal con una penalización que encoge los coeficientes. Funciona bien con pocos datos y variables parecidas entre sí.</dd></div>
+      <div class="termino"><dt>Variable (característica)<small>Modelo</small></dt><dd>Número que resume algo de la parcela y alimenta al modelo, por ejemplo el NDVI promedio de las semanas 15 a 25.</dd></div>
+      <div class="termino"><dt>Estandarizar<small>Modelo</small></dt><dd>Pasar cada variable a z = (x − media) / desviación, para que todas tengan una escala comparable.</dd></div>
+      <div class="termino"><dt>Coeficiente<small>Modelo</small></dt><dd>Peso que el modelo da a una variable. Positivo: sube el rendimiento estimado; negativo: lo baja.</dd></div>
+      <div class="termino"><dt>λ (lambda)<small>Modelo</small></dt><dd>Fuerza de la penalización de ridge. Con λ alto los coeficientes se encogen más.</dd></div>
+      <div class="termino"><dt>Entrenamiento y prueba<small>Modelo</small></dt><dd>Las parcelas de entrenamiento enseñan al modelo; las de prueba se esconden para medir cuánto acierta con datos nuevos.</dd></div>
+      <div class="termino"><dt>Validación cruzada<small>Modelo</small></dt><dd>Se entrena dejando una parcela fuera y se predice esa; se repite con todas. Da una medida más estable.</dd></div>
+      <div class="termino"><dt>R²<small>Modelo</small></dt><dd>Proporción de la variación del rendimiento que explica el modelo. 1 es perfecto; 0 equivale a decir siempre el promedio.</dd></div>
+      <div class="termino"><dt>RMSE<small>Modelo</small></dt><dd>Error cuadrático medio, en t/ha. Es el error típico de las predicciones y castiga más los errores grandes.</dd></div>
+      <div class="termino"><dt>MAE<small>Modelo</small></dt><dd>Error absoluto medio, en t/ha: cuánto se equivoca en promedio.</dd></div>
+      <div class="termino"><dt>Correlación de Pearson<small>Modelo</small></dt><dd>Número de −1 a +1 que dice qué tanto suben o bajan juntas dos variables.</dd></div>
+      <div class="termino"><dt>Interpolación<small>Datos</small></dt><dd>Rellenar una semana sin dato con un valor intermedio entre las semanas vecinas.</dd></div>
+      <div class="termino"><dt>Mediana<small>Datos</small></dt><dd>Valor central de un conjunto ordenado. Es menos sensible a datos extremos que el promedio.</dd></div>
+      <div class="termino"><dt>Simulado<small>Datos</small></dt><dd>Dato inventado para ilustrar mientras no existe el real. En este proyecto: clima, GDD, suelo y eventos.</dd></div>
+    </dl>
+  </main>
+
+  <script src="common.js"></script>
+  <script>
+    const campo = document.getElementById("buscar");
+    const terminos = [...document.querySelectorAll(".termino")];
+
+    campo.addEventListener("input", () => {
+      const texto = campo.value.trim().toLowerCase();
+      let visibles = 0;
+
+      terminos.forEach((termino) => {
+        const coincide = termino.textContent.toLowerCase().includes(texto);
+        termino.hidden = !coincide;
+        if (coincide) visibles += 1;
+      });
+      document.getElementById("sin-resultados").hidden = visibles > 0;
+    });
+  </script>
+</body>
+</html>
