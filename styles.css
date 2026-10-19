@@ -1707,40 +1707,53 @@ html[data-motion="reduce"] #aurora i {
   width: min(1120px, 100%);
 }
 
+/* Panel: una sola columna con aire entre bloques */
 .factores-panel {
   pointer-events: auto;
-  margin-top: 1rem;
-  padding: 1rem 1.2rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.7rem;
+  margin-top: 1.4rem;
+  padding: clamp(1.1rem, 3vw, 2rem);
   background: var(--card);
   backdrop-filter: blur(12px);
   border: 1px solid var(--line);
-  border-radius: 26px;
+  border-radius: 28px;
 }
 
 .factores-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 0.8rem;
+  gap: 10px;
 }
 
 .factores-tabs button {
-  padding: 0.35rem 1rem;
-  font-size: 0.88rem;
+  padding: 0.45rem 1.3rem;
+  font-size: 0.92rem;
+  line-height: 1.25;
+  text-align: left;
 }
 
 .factores-tabs small {
   display: block;
   font-weight: 400;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   opacity: 0.85;
 }
 
+/* Dos columnas: escena a la izquierda, gráfica y controles a la derecha */
 .factores-grid {
   display: grid;
-  grid-template-columns: minmax(240px, 0.8fr) 1.2fr;
-  gap: 1.2rem;
+  grid-template-columns: minmax(260px, 0.8fr) 1.2fr;
+  gap: clamp(1.2rem, 3vw, 2.2rem);
   align-items: start;
+}
+
+.factores-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
 }
 
 .factores svg {
@@ -1754,65 +1767,191 @@ html[data-motion="reduce"] #aurora i {
   fill: var(--ink);
 }
 
-.factores-escena {
+.factores-escena,
+.factores-grafica {
   background: var(--sky);
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-.factores-fase {
-  min-height: 4.6em;
-  margin: 0.6rem 0 0.3rem;
-  padding: 0.6rem 0.8rem;
+/* Clima de la semana: tres datos en fichas iguales */
+.factores-datos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+}
+
+.factores-datos div {
+  padding: 0.55rem 0.4rem;
+  text-align: center;
   background: var(--sky);
-  border-left: 5px solid var(--gold);
-  border-radius: 10px;
-  font-size: 0.92rem;
-  line-height: 1.4;
+  border: 1px solid var(--line);
+  border-radius: 14px;
 }
 
-.factores-fase b {
+.factores-datos dt {
+  font-size: 0.72rem;
+  line-height: 1.2;
+  opacity: 0.75;
+}
+
+.factores-datos dd {
+  margin: 0.1rem 0 0;
+  font: 800 1.15rem / 1.2 "Fraunces", Georgia, serif;
+  font-variant-numeric: tabular-nums;
   color: var(--green);
-}
-
-.factores-ctrl {
-  display: flex;
-  gap: 0.7rem;
-  align-items: center;
-  margin: 0.5rem 0;
-}
-
-.factores-ctrl input {
-  flex: 1;
-  accent-color: var(--rosa);
 }
 
 .factores-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin: 0.3rem 0 0.4rem;
+  gap: 8px;
 }
 
 .factores-chips button {
-  padding: 0.1rem 0.7rem;
-  font-size: 0.74rem;
+  padding: 0.2rem 0.9rem;
+  font-size: 0.8rem;
   border-width: 1.5px;
 }
 
+.factores-leyenda {
+  margin: -0.3rem 0 0;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  opacity: 0.75;
+}
+
+/* Reproductor en una sola barra redondeada */
+.factores-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.4rem 1.1rem 0.4rem 0.45rem;
+  background: var(--sky);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.factores-ctrl button {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+  border-radius: 50%;
+}
+
+.factores-ctrl > span {
+  flex: none;
+  min-width: 9.2rem;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.factores-ctrl input {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--rosa);
+}
+
+/* Fases del ciclo: nombran los números de la gráfica y permiten saltar a cada una */
+.factores-fases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.factores-fases button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.2rem 0.95rem 0.2rem 0.3rem;
+  font-size: 0.82rem;
+  border-width: 1.5px;
+}
+
+.factores-fases i {
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: var(--line);
+  font: 800 0.75rem / 1 "DM Sans", sans-serif;
+  font-style: normal;
+}
+
+.factores-fases button.active i {
+  background: var(--sky);
+  color: var(--green);
+}
+
+/* Explicación de la fase: título a la izquierda, texto a la derecha */
+.factores-fase {
+  display: grid;
+  grid-template-columns: minmax(10rem, 15rem) 1fr;
+  gap: 1rem 2rem;
+  align-items: start;
+  min-height: 7rem;
+  padding: 1.2rem 1.5rem;
+  background: var(--sky);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--gold);
+  border-radius: 18px;
+}
+
+.fase-cab {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.fase-num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--sky);
+  font: 800 1rem / 1 "Fraunces", Georgia, serif;
+}
+
+.fase-cab b {
+  display: block;
+  font: 800 1.15rem / 1.15 "Fraunces", Georgia, serif;
+  color: var(--green);
+}
+
+.fase-cab small {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.78rem;
+}
+
+.factores-fase p {
+  max-width: 68ch;
+  margin: 0;
+  font-size: 0.96rem;
+  line-height: 1.6;
+}
+
+/* Relaciones entre variables: 2 × 2 */
 .factores-relaciones {
   display: grid;
-  gap: 8px;
-  margin-top: 0.8rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
 }
 
 .relacion {
-  padding: 0.55rem 0.8rem;
+  padding: 1rem 1.25rem 1.15rem;
   background: var(--sky);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  font-size: 0.82rem;
-  line-height: 1.38;
+  border-radius: 18px;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
@@ -1821,18 +1960,70 @@ html[data-motion="reduce"] #aurora i {
   box-shadow: 0 0 0 3px rgba(226, 125, 154, 0.25);
 }
 
+.relacion-cab {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
 .relacion b {
+  font: 800 1.05rem / 1.2 "Fraunces", Georgia, serif;
   color: var(--green);
 }
 
 .relacion .r {
-  float: right;
-  margin-left: 0.6rem;
-  padding: 0 0.55rem;
+  flex: none;
+  padding: 0.1rem 0.7rem;
   border-radius: 999px;
   background: var(--gold);
   color: #3f4a3c;
-  font-weight: 700;
+  font: 700 0.8rem "DM Sans", sans-serif;
+}
+
+.relacion .fuerza {
+  display: block;
+  margin: 0.1rem 0 0.55rem;
+}
+
+.relacion p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.relacion .nota {
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  opacity: 0.85;
+}
+
+.factores-nota {
+  display: block;
+  max-width: 80ch;
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .factores-col:first-child {
+    width: 100%;
+    max-width: 440px;
+    margin-inline: auto;
+  }
+
+  .factores-fase {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .factores-relaciones {
+    grid-template-columns: 1fr;
+  }
+
+  .factores-ctrl > span {
+    min-width: 0;
+  }
 }
 
 .modelo-pasos {
