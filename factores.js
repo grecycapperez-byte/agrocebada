@@ -30,7 +30,7 @@
     { clave: "f", nombre: "FAPAR", color: "var(--ink)", trazo: "10 3 2 3" },
     { clave: "d", nombre: "DSWI", color: "var(--green)", trazo: "2 4" },
   ];
-  const ETIQUETAS_FASE = ["Arranque", "Macoll.", "Pico", "Madurez"];
+  const ETIQUETAS_FASE = ["Arranque", "Macollamiento", "Pico", "Madurez"];
   const NOMBRE = Object.fromEntries(SERIES.map((s) => [s.clave, s.nombre]));
   const ORDEN = SERIES.map((s) => s.clave);
 
@@ -184,24 +184,35 @@
   contenedor.innerHTML = `
     <div class="factores-tabs" id="fz-tabs" role="group" aria-label="Estado"></div>
     <div class="factores-grid">
-      <svg class="factores-escena" id="fz-escena" viewBox="0 0 300 280" role="img"
-           aria-label="Planta de cebada que crece según los índices de satélite"></svg>
-      <div>
+      <div class="factores-col">
+        <svg class="factores-escena" id="fz-escena" viewBox="0 0 300 262" role="img"
+             aria-label="Planta de cebada que crece según los índices de satélite"></svg>
+        <dl class="factores-datos" aria-label="Clima de la semana">
+          <div><dt>Nubes</dt><dd id="fz-nubes">0%</dd></div>
+          <div><dt>Tmín*</dt><dd id="fz-tmin">0 °C</dd></div>
+          <div><dt>GDD*</dt><dd id="fz-gdd">0</dd></div>
+        </dl>
+      </div>
+      <div class="factores-col">
         <div class="factores-chips" id="fz-chips" role="group" aria-label="Variables de la gráfica"></div>
-        <svg id="fz-grafica" viewBox="0 0 460 215" role="img"
+        <svg class="factores-grafica" id="fz-grafica" viewBox="0 0 460 240" role="img"
              aria-label="Curvas de los índices de satélite y del clima de la parcela en 2025"></svg>
+        <p class="factores-leyenda">
+          Semanas de 2025. Cada curva va de su mínimo (0) a su máximo (1). Abajo: barras de nubosidad
+          (real) y línea de Tmín* (simulada).
+        </p>
         <div class="factores-ctrl">
           <button id="fz-play" aria-label="Reproducir o pausar">▶</button>
           <span>Sem. <b id="fz-semana">15</b> · <span id="fz-mes">abril</span></span>
           <input type="range" id="fz-slider" min="${SEMANA_INICIAL}" max="${SEMANA_FINAL}" step="0.1"
                  value="${SEMANA_INICIAL}" aria-label="Semana de 2025" />
         </div>
+        <div class="factores-fases" id="fz-fases" role="group" aria-label="Fases del ciclo"></div>
       </div>
     </div>
     <div class="factores-fase" id="fz-fase" aria-live="polite"></div>
-    <div class="factores-relaciones" id="fz-relaciones"
-         style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))"></div>
-    <small>
+    <div class="factores-relaciones" id="fz-relaciones"></div>
+    <small class="factores-nota">
       Parcela real de cada estado, año 2025. Planet: NDVI, EVI, LAI · Sentinel-2: FAPAR, DSWI ·
       * simulado (temperatura y GDD). Las correlaciones se calculan con las semanas 15 a 52 de la parcela elegida.
     </small>`;
@@ -217,6 +228,10 @@
     slider: $("#fz-slider"),
     fase: $("#fz-fase"),
     relaciones: $("#fz-relaciones"),
+    fases: $("#fz-fases"),
+    nubes: $("#fz-nubes"),
+    tmin: $("#fz-tmin"),
+    gdd: $("#fz-gdd"),
   };
 
   function montarTabs() {
@@ -243,6 +258,20 @@
         dibujar();
       });
       el.chips.appendChild(boton);
+    });
+  }
+
+  function montarFases() {
+    el.fases.innerHTML = "";
+    ETIQUETAS_FASE.forEach((nombre, i) => {
+      const boton = document.createElement("button");
+      boton.innerHTML = `<i>${i + 1}</i>${nombre}`;
+      boton.addEventListener("click", () => {
+        estado.jugando = false;
+        estado.w = DATOS[estado.zona].fronteras[i];
+        dibujar();
+      });
+      el.fases.appendChild(boton);
     });
   }
 
@@ -325,17 +354,16 @@
       .join("");
 
     const gota = 4 + 7 * vd;
-    const semanaEntera = Math.min(SEMANA_FINAL, Math.round(w));
 
     el.escena.innerHTML = `
-      <rect width="300" height="280" fill="var(--sky)"/>
+      <rect width="300" height="262" fill="var(--sky)"/>
       <circle cx="${SOL.x}" cy="${SOL.y}" r="${13 + 3 * vf}" fill="var(--gold)" opacity="${(0.55 + 0.45 * (1 - nubes)).toFixed(2)}"/>
       <g opacity="${(0.15 + 0.85 * nubes).toFixed(2)}" fill="var(--line)" stroke="var(--ink)" stroke-opacity=".35">
         <ellipse cx="78" cy="48" rx="34" ry="13"/><ellipse cx="62" cy="40" rx="16" ry="12"/><ellipse cx="92" cy="38" rx="18" ry="14"/>
       </g>
-      <text x="78" y="72" text-anchor="middle">nubes ${Math.round(nubes * 100)}%</text>
+      <text x="78" y="70" text-anchor="middle">nubes</text>
       ${rayos}
-      <rect x="0" y="${SUELO_Y}" width="300" height="42" fill="#a9865a" opacity=".55"/>
+      <rect x="0" y="${SUELO_Y}" width="300" height="24" fill="#a9865a" opacity=".55"/>
       <path d="M${x0} ${SUELO_Y} C ${x0 - 3} ${SUELO_Y - alto * 0.4}, ${x0 + 4} ${SUELO_Y - alto * 0.7}, ${xTop.toFixed(1)} ${yTop.toFixed(1)}"
             fill="none" stroke="${colorTallo}" stroke-width="3.4" stroke-linecap="round"/>
       ${hojas}
@@ -343,28 +371,36 @@
       <path d="M215 ${SUELO_Y - 8} q ${-gota * 0.9} ${-gota * 1.2} 0 ${-gota * 2} q ${gota * 0.9} ${gota * 0.8} 0 ${gota * 2}Z"
             fill="#5aa0d8" opacity="${(0.3 + 0.7 * vd).toFixed(2)}"/>
       <text x="228" y="${SUELO_Y - 6}">agua (DSWI)</text>
-      <text x="${SOL.x - 20}" y="${SOL.y + 34}">luz (FAPAR)</text>
-      <text x="10" y="262">Tmín ${DATA.cli.tmin[semanaEntera]} °C* · GDD ${DATA.cli.gdd[semanaEntera]}*</text>`;
+      <text x="${SOL.x}" y="${SOL.y - 24}" text-anchor="middle">luz (FAPAR)</text>`;
   }
 
   /* --- Dibujo: gráfica ------------------------------------------------- */
 
   const X = (w) => 28 + ((w - SEMANA_INICIAL) / (SEMANA_FINAL - SEMANA_INICIAL)) * 422;
-  const Y = (v) => 140 - v * 120;
+  const Y = (v) => 150 - v * 100;
+  const BASE_CLIMA = 226;
 
   function dibujarGrafica(datos, w) {
     const fase = estado.fase;
     const activas = fase >= 0 ? fases[fase].series : [];
     const { fronteras } = datos;
 
+    // Cada fase lleva su número dentro de la banda; los nombres están en los botones de abajo
     const bandas = fases
       .map((f, i) => {
         const x1 = X(fronteras[i]);
         const x2 = X(fronteras[i + 1]);
+        const cx = (x1 + x2) / 2;
+        const actual = i === fase;
+
         return `
-          <rect x="${x1}" y="14" width="${x2 - x1}" height="126" fill="${i % 2 ? "var(--green)" : "var(--gold)"}"
-                opacity="${i === fase ? 0.2 : 0.07}"/>
-          <text x="${(x1 + x2) / 2}" y="26" text-anchor="middle" opacity=".75">${ETIQUETAS_FASE[i]}</text>`;
+          <rect x="${x1}" y="14" width="${x2 - x1}" height="136" fill="${i % 2 ? "var(--green)" : "var(--gold)"}"
+                opacity="${actual ? 0.2 : 0.07}"/>
+          ${i ? `<line x1="${x1}" x2="${x1}" y1="14" y2="150" stroke="var(--line)" stroke-dasharray="2 4"/>` : ""}
+          <circle cx="${cx}" cy="29" r="9" fill="${actual ? "var(--green)" : "none"}" stroke="var(--green)"
+                  stroke-width="1.5" opacity="${actual ? 1 : 0.5}"/>
+          <text x="${cx}" y="32.5" text-anchor="middle"
+                style="font-weight:800;fill:${actual ? "var(--sky)" : "var(--ink)"}">${i + 1}</text>`;
       })
       .join("");
 
@@ -385,7 +421,7 @@
         return `
           <path d="${completa}" fill="none" stroke="${serie.color}" stroke-width="1.5" opacity=".15"/>
           <path d="${avance}" fill="none" stroke="${serie.color}" stroke-dasharray="${serie.trazo}"
-                stroke-width="${destacada ? 4 : 2.2}" opacity="${destacada || !activas.length ? 1 : 0.4}"
+                stroke-width="${destacada ? 3.6 : 2.2}" opacity="${destacada || !activas.length ? 1 : 0.4}"
                 stroke-linecap="round"/>`;
       })
       .join("");
@@ -396,28 +432,30 @@
     const tMax = Math.max(...tmin);
     const barras = DATA.cli.cld
       .slice(SEMANA_INICIAL, Math.floor(w) + 1)
-      .map((v, i) => `<rect x="${X(SEMANA_INICIAL + i) - 4}" y="${206 - v * 0.26}" width="8" height="${v * 0.26}" fill="var(--ink)" opacity=".22"/>`)
+      .map((v, i) => `<rect x="${X(SEMANA_INICIAL + i) - 4}" y="${BASE_CLIMA - v * 0.3}" width="8" height="${v * 0.3}" rx="1.5" fill="var(--ink)" opacity=".22"/>`)
       .join("");
     const termica = tmin
       .slice(0, Math.floor(w) - SEMANA_INICIAL + 1)
-      .map((v, i) => `${i ? "L" : "M"}${X(SEMANA_INICIAL + i).toFixed(1)},${(206 - ((v - tMin) / (tMax - tMin || 1)) * 26).toFixed(1)}`)
+      .map((v, i) => `${i ? "L" : "M"}${X(SEMANA_INICIAL + i).toFixed(1)},${(BASE_CLIMA - ((v - tMin) / (tMax - tMin || 1)) * 28).toFixed(1)}`)
       .join("");
 
     const ejes = [15, 20, 30, 40, 52]
-      .map((s) => `<text x="${X(s - 1)}" y="156" text-anchor="middle">${s}</text>`)
+      .map(
+        (s) => `
+        <line x1="${X(s - 1)}" x2="${X(s - 1)}" y1="150" y2="155" stroke="var(--line)" stroke-width="2"/>
+        <text x="${X(s - 1)}" y="170" text-anchor="middle">${s}</text>`
+      )
       .join("");
 
     el.grafica.innerHTML = `
       ${bandas}
-      <line x1="28" x2="450" y1="140" y2="140" stroke="var(--line)" stroke-width="2"/>
+      <line x1="28" x2="450" y1="150" y2="150" stroke="var(--line)" stroke-width="2"/>
       ${lineas}
-      <line x1="${X(w)}" x2="${X(w)}" y1="14" y2="140" stroke="var(--rosa)" stroke-width="2"/>
+      <line x1="${X(w)}" x2="${X(w)}" y1="14" y2="150" stroke="var(--rosa)" stroke-width="2"/>
       ${ejes}
-      <text x="239" y="167" text-anchor="middle">semana de 2025 · cada curva va de su mínimo (0) a su máximo (1)</text>
-      <line x1="28" x2="450" y1="206" y2="206" stroke="var(--line)"/>
+      <line x1="28" x2="450" y1="${BASE_CLIMA}" y2="${BASE_CLIMA}" stroke="var(--line)"/>
       ${barras}
-      <path d="${termica}" fill="none" stroke="var(--rosa)" stroke-width="2" stroke-dasharray="4 3"/>
-      <text x="30" y="182">Nubes (real, barras) y Tmín* (simulada, línea)</text>`;
+      <path d="${termica}" fill="none" stroke="var(--rosa)" stroke-width="2" stroke-dasharray="4 3"/>`;
   }
 
   /* --- Fase y relaciones ----------------------------------------------- */
@@ -438,14 +476,18 @@
       // Si en esta parcela la relación sale débil o inversa, se dice con honestidad
       const nota =
         r < 0.4
-          ? `<br><i>Ojo: en general se espera una relación positiva, pero en esta parcela sale ${fraseFuerza(r)}. Los datos de satélite tienen ruido y cada parcela es distinta.</i>`
+          ? `<p class="nota"><i>Ojo: en general se espera una relación positiva, pero en esta parcela sale ${fraseFuerza(r)}. Los datos de satélite tienen ruido y cada parcela es distinta.</i></p>`
           : "";
 
       return `
         <div class="relacion ${activos.includes(par) ? "activa" : ""}">
-          <span class="r">r = ${Util.fmt(r, 2)}</span>
-          <b>${NOMBRE[a]} ↔ ${NOMBRE[b]}</b> · ${fraseFuerza(r)}<br>
-          ${EXPLICACION[par]}${nota}
+          <div class="relacion-cab">
+            <b>${NOMBRE[a]} ↔ ${NOMBRE[b]}</b>
+            <span class="r">r = ${Util.fmt(r, 2)}</span>
+          </div>
+          <small class="fuerza">${fraseFuerza(r)}</small>
+          <p>${EXPLICACION[par]}</p>
+          ${nota}
         </div>`;
     }).join("");
   }
@@ -455,7 +497,14 @@
     if (nueva === estado.fase) return;
 
     estado.fase = nueva;
-    el.fase.innerHTML = `<b>${fases[nueva].titulo}.</b> ${fases[nueva].texto}`;
+    const [nombre, semanas] = fases[nueva].titulo.split(" · ");
+    el.fase.innerHTML = `
+      <div class="fase-cab">
+        <span class="fase-num">${nueva + 1}</span>
+        <div><b>${nombre}</b><small>${semanas}</small></div>
+      </div>
+      <p>${fases[nueva].texto}</p>`;
+    [...el.fases.children].forEach((boton, i) => boton.classList.toggle("active", i === nueva));
     dibujarRelaciones(datos);
   }
 
@@ -471,6 +520,11 @@
 
     el.semana.textContent = Math.round(w) + 1;
     el.mes.textContent = mesDeSemana(w);
+
+    const semanaEntera = Math.min(SEMANA_FINAL, Math.round(w));
+    el.nubes.textContent = `${Math.round(valorEn(DATA.cli.cld, w))}%`;
+    el.tmin.textContent = `${DATA.cli.tmin[semanaEntera]} °C`;
+    el.gdd.textContent = `${DATA.cli.gdd[semanaEntera]}`;
     el.slider.value = w;
     el.play.textContent = estado.jugando ? "⏸" : estado.w >= SEMANA_FINAL ? "↻" : "▶";
   }
@@ -545,6 +599,7 @@
 
   montarTabs();
   montarChips();
+  montarFases();
   dibujar();
   requestAnimationFrame(ciclo);
 })();
